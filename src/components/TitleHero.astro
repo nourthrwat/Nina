@@ -1,0 +1,18 @@
+---
+// Centered page title used on the groups, menu and reservation pages.
+interface Props { title: string }
+const { title } = Astro.props;
+---
+
+<section class="title-hero">
+  <h1 class="h1 hero-in">{title}</h1>
+</section>
+
+<style>
+  .title-hero {
+    max-width: calc(1011px + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: clamp(48px, 7.4vw, 102px) var(--gutter) 26px;
+    text-align: center;
+  }
+</style>

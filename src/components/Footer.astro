@@ -1,0 +1,133 @@
+---
+import Logo from '../assets/icons/logo-footer.svg';
+import { contact, hours, occasions, socials } from '../data/site';
+---
+
+<footer class="footer">
+  <div class="footer__grid">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo" aria-label="Nim – home">
+        <Logo width={192} height={115} aria-hidden="true" />
+      </a>
+      <address class="footer__address">
+        <p>{contact.street}<br />{contact.city}</p>
+        <p>
+          Email: <a href={`mailto:${contact.email}`}>{contact.email}</a><br />
+          Tel: <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
+        </p>
+      </address>
+      <ul class="footer__socials" role="list">
+        {socials.map((s) => <li><a href={s.href}>{s.label}</a></li>)}
+      </ul>
+    </div>
+
+    <nav class="footer__col" aria-labelledby="footer-links">
+      <h2 id="footer-links" class="footer__title">Links</h2>
+      <div class="footer__lists">
+        <ul role="list">
+          <li><a href="/private-dining/">Private Dining</a></li>
+          {occasions.map((o) => <li><a href="/all-inclusive-groups/#gelegenheden">{o}</a></li>)}
+        </ul>
+        <ul role="list">
+          <li><a href="/menu/">Menu</a></li>
+          <li><a href="/reservation/#contact">Contact</a></li>
+          <li><a href="/reservation/">Reserveren</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Open op</h2>
+      <dl class="footer__hours">
+        {hours.map((h) => <div><dt>{h.day}:</dt> <dd>{h.time}</dd></div>)}
+      </dl>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1.5px solid var(--c-line-strong);
+    font-family: var(--f-ui);
+    font-size: 1rem;
+    letter-spacing: 0.045em;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 386fr 388fr 388fr;
+    max-width: 1162px;
+    margin-inline: auto;
+    border-inline: 1px solid var(--c-line-strong);
+  }
+  .footer__grid > * + * { border-left: 1px solid var(--c-line-strong); }
+
+  .footer__brand {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  .footer__logo {
+    display: block;
+    width: fit-content;
+    padding: 25px 0 0 52px;
+    color: var(--c-white);
+    transition: opacity 0.3s;
+  }
+  .footer__logo:hover { opacity: 0.8; }
+  .footer__logo :global(svg) { width: 192px; height: auto; }
+  .footer__address {
+    display: grid;
+    gap: 16px;
+    padding: 24px 46px 32px;
+    font-family: var(--f-body);
+    font-style: normal;
+    line-height: 1.8;
+    color: var(--c-white);
+  }
+  .footer__socials {
+    display: flex;
+    gap: 45px;
+    padding: 18px 46px 24px;
+    border-top: 1px solid var(--c-line-strong);
+    line-height: 1.2;
+  }
+
+  .footer__col { padding: 48px 48px 48px; }
+  .footer__title {
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--c-white);
+    margin-bottom: 26px;
+  }
+  .footer__lists {
+    display: flex;
+    gap: 66px;
+  }
+  .footer__lists ul { display: grid; gap: 16px; align-content: start; line-height: 1.2; color: var(--c-pure-white); }
+
+  .footer a { transition: color 0.3s; }
+  .footer a:hover { color: var(--c-pink-bright); }
+
+  .footer__hours { margin: 0; line-height: 1.8; color: var(--c-white); }
+  .footer__hours dt, .footer__hours dd { display: inline; margin: 0; }
+
+  @media (max-width: 1023px) {
+    .footer__grid { grid-template-columns: 1fr 1fr; border-inline: 0; }
+    .footer__brand { grid-column: 1 / -1; border-bottom: 1px solid var(--c-line-strong); }
+    .footer__grid > .footer__col:first-of-type { border-left: 0; }
+    .footer__logo { padding: 32px var(--gutter) 0; }
+    .footer__address, .footer__socials { padding-inline: var(--gutter); }
+    .footer__col { padding: 40px var(--gutter); }
+  }
+  @media (max-width: 599px) {
+    .footer__grid { grid-template-columns: 1fr; }
+    .footer__grid > * + * { border-left: 0; border-top: 1px solid var(--c-line-strong); }
+    .footer__brand { border-bottom: 0; }
+    .footer__logo :global(svg) { width: 150px; }
+    .footer__socials { gap: 28px; flex-wrap: wrap; }
+    .footer__lists { gap: 40px; }
+  }
+</style>

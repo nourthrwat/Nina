@@ -1,0 +1,14 @@
+---
+// Four-petal "Union" mark from the Figma buttons, tinted via currentColor.
+interface Props { class?: string; size?: number }
+const { class: className = 'btn__icon', size = 18 } = Astro.props;
+---
+
+<svg class={className} width={size} height={size} viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+  <path
+    fill="currentColor"
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M9 6.89S12.445 5.348 12.445 3.445C12.445 1.543 9 0 9 0S5.555 1.543 5.555 3.445C5.555 5.348 9 6.89 9 6.89ZM9 18S12.445 16.457 12.445 14.555C12.445 12.652 9 11.11 9 11.11S5.555 12.652 5.555 14.555C5.555 16.457 9 18 9 18ZM14.555 12.445C12.652 12.445 11.11 9 11.11 9S12.652 5.555 14.555 5.555C16.457 5.555 18 9 18 9S16.457 12.445 14.555 12.445ZM0 9S1.543 12.445 3.445 12.445C5.348 12.445 6.89 9 6.89 9S5.348 5.555 3.445 5.555C1.543 5.555 0 9 0 9Z"
+  ></path>
+</svg>

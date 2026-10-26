@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TitleHero from '../components/TitleHero.astro';
+import IntroBlock from '../components/IntroBlock.astro';
+import Benefits from '../components/Benefits.astro';
+import Ornament from '../components/Ornament.astro';
+import Occasions from '../components/Occasions.astro';
+import MediaText from '../components/MediaText.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Gallery from '../components/Gallery.astro';
+import CtaBig from '../components/CtaBig.astro';
+import foodTable from '../assets/img/food-table.jpg';
+import party from '../assets/img/party.jpg';
+import painting from '../assets/img/painting.jpg';
+
+const longCopy =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget sapien sit amet magna sollicitudin semper. Integer fringilla placerat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget sapien sit amet magna sollicitudin semper. Integer fringilla placerat.';
+---
+
+<BaseLayout
+  title="All-inclusive groepsarrangementen tot 40 personen | Nim Amsterdam"
+  description="Wij creëren all-inclusive belevingen voor groepen tot 40 personen: verjaardagen, high tea, bedrijfsfeesten, bruiloften, babyshowers en vergaderingen aan de gracht."
+>
+  <TitleHero title="Wij creëren all-inclusive belevingen voor groepen tot 40 personen." />
+  <IntroBlock eyebrow="jouw private dining Huppeldepup" />
+  <Benefits />
+  <Ornament />
+  <Occasions href="/reservation/" />
+  <div class="stack">
+    <MediaText title="Informatie" text={longCopy} image={foodTable} alt="Gedekte tafel met soep, broodjes en bloemen" />
+    <MediaText title="De ruimte" text={longCopy} image={party} alt="Gezelschap aan de lange tafel in de privéruimte" reverse dim={0.2} />
+    <MediaText title="Over ons" text={longCopy} image={painting} alt="Schilderij in gouden lijst aan de donkere muur" />
+  </div>
+  <Testimonials />
+  <Gallery />
+  <CtaBig />
+</BaseLayout>
+
+<style>
+  .stack { padding-block: 32px 60px; }
+</style>

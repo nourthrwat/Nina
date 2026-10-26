@@ -1,0 +1,141 @@
+---
+// "Voordelen uitgelegd": four tarot-style cards on Nim pink with grain texture.
+import HandSmall from '../assets/icons/hand-small.svg';
+import IconHand from '../assets/icons/benefit-hand.svg';
+import IconCards from '../assets/icons/benefit-cards.svg';
+import IconRaven from '../assets/icons/benefit-raven.svg';
+import IconSkull from '../assets/icons/benefit-skull.svg';
+import Sparkle from '../assets/icons/sparkle.svg';
+
+interface Props { ornament?: boolean }
+const { ornament = true } = Astro.props;
+
+const cards = [
+  { title: 'Exclusieve privé-ervaring', Icon: IconHand, w: 48, h: 136 },
+  { title: 'Menu op maat', Icon: IconCards, w: 86, h: 106 },
+  { title: 'Unieke locatie aan de gracht', Icon: IconRaven, w: 93, h: 96 },
+  { title: 'Persoonlijke aandacht', Icon: IconSkull, w: 106, h: 112 },
+];
+---
+
+<section class="benefits">
+  {ornament && (
+    <div class="benefits__ornament" data-reveal="fade">
+      <HandSmall width={26} height={64} aria-hidden="true" />
+    </div>
+  )}
+  <div class="benefits__head text-center" data-reveal>
+    <h2 class="h2">Voordelen uitgelegd</h2>
+    <p>Dit zijn de voordelen van Huppeldepup</p>
+  </div>
+  <ol class="benefits__list" role="list" data-reveal-stagger>
+    {cards.map(({ title, Icon, w, h }, i) => (
+      <li class="benefits__item">
+        <div class="card">
+          <span class="card__num">{i + 1}.</span>
+          <h3 class="card__title">{title}</h3>
+          <Icon class="card__icon" width={w} height={h} aria-hidden="true" />
+          {i === 2 && <Sparkle class="card__sparkle" width={26} height={24} aria-hidden="true" />}
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .benefits {
+    max-width: calc(var(--w-wide) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: 0 var(--gutter) var(--section-y);
+  }
+  .benefits__ornament {
+    display: flex;
+    justify-content: center;
+    margin-top: -32px;
+    margin-bottom: 57px;
+  }
+  .benefits__head {
+    display: grid;
+    gap: 16px;
+    justify-items: center;
+    margin-bottom: 64px;
+  }
+  .benefits__head p { max-width: 462px; line-height: 1.4; }
+
+  .benefits__list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 274px));
+    justify-content: center;
+    gap: 20px;
+    align-items: start;
+    margin: 0;
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    aspect-ratio: 274 / 400;
+    padding: 40px 24px 56px;
+    border: 1px solid var(--c-pink);
+    background: var(--c-pink);
+    color: var(--c-bg);
+    text-align: center;
+    isolation: isolate;
+    /* individual translate/rotate so hover doesn't fight the reveal transform */
+    transition: translate 0.6s var(--ease), rotate 0.6s var(--ease), box-shadow 0.6s var(--ease);
+  }
+  /* grain: Figma layers the texture in "screen" at 40% */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: url('/texture.webp') 0 0 / 819px auto;
+    mix-blend-mode: screen;
+    opacity: 0.4;
+  }
+  /* inner keyline, inset 6px */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid var(--c-bg);
+    pointer-events: none;
+  }
+  .benefits__item:nth-child(even) { margin-top: 33px; }
+  .card:hover { translate: 0 -8px; rotate: -1deg; box-shadow: 0 30px 50px -30px rgba(0, 0, 0, 0.7); }
+  .benefits__item:nth-child(even) .card:hover { rotate: 1deg; }
+
+  .card__num,
+  .card__title {
+    font-family: var(--f-display);
+    font-size: 1.75rem;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  .card__title { margin-top: 41px; max-width: 226px; font-weight: 400; }
+  .card :global(.card__sparkle) { position: absolute; left: 29px; top: 28px; }
+  .card :global(.card__icon) { margin-top: auto; height: auto; max-height: 34%; width: auto; }
+
+  @media (max-width: 1023px) {
+    .benefits__list { grid-template-columns: repeat(2, minmax(0, 274px)); row-gap: 40px; }
+  }
+  @media (max-width: 559px) {
+    .benefits__list {
+      display: flex;
+      justify-content: flex-start;
+      gap: 16px;
+      margin-inline: calc(var(--gutter) * -1);
+      padding: 0 var(--gutter) 40px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .benefits__list::-webkit-scrollbar { display: none; }
+    .benefits__item { flex: 0 0 72%; scroll-snap-align: center; }
+    .benefits__item:nth-child(even) { margin-top: 0; }
+    .card__title { margin-top: 28px; }
+  }
+</style>

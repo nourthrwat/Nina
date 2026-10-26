@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TitleHero from '../components/TitleHero.astro';
+import IntroBlock from '../components/IntroBlock.astro';
+import Ornament from '../components/Ornament.astro';
+import ReservationForm from '../components/ReservationForm.astro';
+import ContactBlock from '../components/ContactBlock.astro';
+---
+
+<BaseLayout
+  title="Reserveren | Private dining bij Nim Amsterdam"
+  description="Boek uw private lunch, diner of feest aan de Keizersgracht. Vul het reserveringsformulier in of neem direct contact op met ons team."
+>
+  <TitleHero title="Boek hier uw reservering voor magie aan de boterkant" />
+  <IntroBlock eyebrow="jouw private dining bij huppeldepup?" bordered={false} />
+  <Ornament />
+  <section class="booking container" aria-labelledby="booking-title">
+    <h2 id="booking-title" class="h2 text-center" data-reveal>Maak hier uw reservering</h2>
+    <div data-reveal>
+      <ReservationForm />
+    </div>
+  </section>
+  <ContactBlock />
+</BaseLayout>
+
+<style>
+  .booking { padding-top: 81px; }
+  .booking h2 { margin-bottom: 64px; }
+  @media (max-width: 767px) {
+    .booking { padding-top: 56px; }
+    .booking h2 { margin-bottom: 40px; }
+  }
+</style>

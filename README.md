@@ -41,3 +41,27 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## Nim / Huppeldepup site notes
+
+Built from the Figma file "Showcase (Copy)", page "Design all pages" (6 desktop frames).
+
+| Route | Figma frame |
+| --- | --- |
+| `/` | Home |
+| `/all-inclusive-groups/` | Diensten overzicht (groups) |
+| `/private-dining/` | Diensten Detailpagina (canals) |
+| `/menu/` | Diensten overzicht (menu) |
+| `/reservation/` | Reservering / contact / offerte pagina |
+| `/thank-you/` | Bedankt pagina |
+
+Open items:
+
+- **Fonts**: the design uses Cako, PP Neue Montreal and Helvetica Neue (licensed). They are used when
+  installed locally; otherwise Gilda Display / Inter Tight from Google Fonts stand in. See the note at
+  the top of `src/styles/global.css` to self-host the licensed files.
+- **Reservations**: there is no booking backend. Set `PUBLIC_RESERVATION_ENDPOINT` to a URL that
+  accepts a JSON POST; on success the form redirects to `/thank-you/`. Without it, the form validates
+  and then asks visitors to call or mail.
+- **Content gaps in the design**: social account URLs (`src/data/site.ts`), FAQ answers and most body
+  copy are still placeholder text.

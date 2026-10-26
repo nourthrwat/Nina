@@ -1,0 +1,27 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Diamond from './Diamond.astro';
+
+type Props = {
+  href?: string;
+  variant?: 'primary' | 'outline';
+  /** Figma places the diamond before the label on outline buttons. */
+  iconFirst?: boolean;
+  type?: 'button' | 'submit';
+  class?: string;
+} & Omit<HTMLAttributes<'a'>, 'type'>;
+
+const { href, variant = 'primary', iconFirst = variant === 'outline', type = 'button', class: className, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  class:list={['btn', `btn--${variant}`, className]}
+  {...rest}
+>
+  {iconFirst && <Diamond />}
+  <span><slot /></span>
+  {!iconFirst && <Diamond />}
+</Tag>

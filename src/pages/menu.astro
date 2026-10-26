@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TitleHero from '../components/TitleHero.astro';
+import MenuTable from '../components/MenuTable.astro';
+import MediaText from '../components/MediaText.astro';
+import CtaBig from '../components/CtaBig.astro';
+import painting from '../assets/img/painting.jpg';
+import { lorem } from '../data/site';
+---
+
+<BaseLayout
+  title="Menu | Private lunch & diner bij Nim Amsterdam"
+  description="Bekijk onze private lunch- en dinermenu's en het drankpakket, vanaf €25 p.p. Ideaal voor groepen vanaf 8 personen aan de Keizersgracht."
+>
+  <TitleHero title="Menu" />
+  <section class="container menu-page">
+    <MenuTable />
+  </section>
+  <MediaText title="Extra informatie indien nodig" text={lorem} image={painting} alt="Schilderij in gouden lijst aan de donkere muur" reverse />
+  <CtaBig />
+</BaseLayout>
+
+<style>
+  .menu-page { padding-block: 92px 98px; }
+  @media (max-width: 767px) { .menu-page { padding-block: 48px; } }
+</style>

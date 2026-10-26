@@ -1,16 +1,136 @@
 ---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IntroBlock from '../components/IntroBlock.astro';
+import Benefits from '../components/Benefits.astro';
+import About from '../components/About.astro';
+import Ornament from '../components/Ornament.astro';
+import Occasions from '../components/Occasions.astro';
+import Testimonials from '../components/Testimonials.astro';
+import Gallery from '../components/Gallery.astro';
+import CtaBig from '../components/CtaBig.astro';
+import hero from '../assets/img/hero.jpg';
+import handBranch from '../assets/img/hand-branch.png';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout
+  title="Private Dining Amsterdam | Huppeldepup bij Nim"
+  description="Dé all-inclusive Private Dining locatie aan de Keizersgracht in Amsterdam. Exclusieve privéruimte, menu op maat en persoonlijke aandacht voor elke gelegenheid."
+>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__text">
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__word hero-in">Private</span>
+        <span class="hero__word hero__word--2 hero-in" style="--hero-delay:.15s">dining</span>
+      </h1>
+      <p class="hero__tagline hero-in" style="--hero-delay:.3s">
+        Dé all-inclusive Private Dining locatie op de <span>Huppeldepup</span>.
+      </p>
+      <Image class="hero__hand hero-in" style="--hero-delay:.45s" src={handBranch} alt="" width={55} height={128} loading="eager" />
+    </div>
+    <div class="hero__media hero-in" style="--hero-delay:.2s">
+      <Image
+        src={hero}
+        alt="Lange gedekte tafel met kaarsen en bloemen in de privéruimte"
+        widths={[640, 1024, 1360, 1600]}
+        sizes="(max-width: 1440px) 95vw, 1360px"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </section>
+
+  <IntroBlock eyebrow="jouw private dining bij HUPPELDEPUP?" />
+  <Benefits />
+  <About />
+  <Ornament />
+  <Occasions />
+  <Testimonials />
+  <Gallery />
+  <CtaBig />
+</BaseLayout>
+
+<style>
+  .hero {
+    max-width: calc(var(--w-wide) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: clamp(48px, 8.3vw, 120px) var(--gutter) 0;
+  }
+  .hero__text {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'title tagline'
+      'title hand';
+    max-width: 1090px;
+    margin-inline: auto;
+  }
+  .hero__title {
+    grid-area: 1 / 1 / 3 / 3;
+    display: grid;
+    gap: 24px;
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: var(--fs-hero);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--c-pink);
+  }
+  .hero__word { display: block; }
+  .hero__word--2 { justify-self: end; }
+  .hero__tagline {
+    grid-area: 1 / 2;
+    justify-self: end;
+    align-self: center;
+    max-width: 335px;
+    font-family: var(--f-body);
+    text-align: center;
+    letter-spacing: 0.04em;
+    color: var(--c-pure-white);
+  }
+  .hero__tagline span { color: var(--c-pink); }
+  .hero__text :global(.hero__hand) {
+    grid-area: 2 / 1;
+    align-self: start;
+    width: clamp(32px, 3.8vw, 55px);
+    height: auto;
+    margin-top: 8px;
+  }
+
+  .hero__media {
+    position: relative;
+    margin-top: calc(var(--fs-hero) * -0.59);
+    aspect-ratio: 1360 / 740;
+    border-radius: clamp(80px, 13.9vw, 200px);
+    overflow: hidden;
+  }
+  .hero__media::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.2); }
+  .hero__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 72%;
+  }
+
+  @media (max-width: 767px) {
+    .hero__text {
+      grid-template-columns: 1fr;
+      grid-template-areas: none;
+    }
+    .hero__title { grid-area: auto; gap: 8px; }
+    .hero__tagline {
+      grid-area: auto;
+      order: 2;
+      justify-self: start;
+      text-align: left;
+      margin-top: 16px;
+    }
+    .hero__text :global(.hero__hand) { display: none; }
+    .hero__media {
+      margin-top: 32px;
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>

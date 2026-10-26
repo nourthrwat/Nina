@@ -1,0 +1,99 @@
+---
+// Contact card beside a photo (Figma "Call to Action" component).
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+import Logo from '../assets/icons/logo-contact.svg';
+import painting from '../assets/img/painting.jpg';
+import { contact, hours } from '../data/site';
+---
+
+<section class="contact" id="contact" aria-labelledby="contact-title">
+  <div class="contact__media" data-reveal="clip">
+    <Image src={painting} alt="Schilderij in gouden lijst aan de donkere muur van Nim" widths={[600, 1148]} sizes="(max-width: 899px) 100vw, 574px" loading="lazy" />
+  </div>
+  <div class="contact__card" data-reveal>
+    <div class="contact__info">
+      <h2 id="contact-title" class="contact__title">Contact</h2>
+      <address>
+        <p>{contact.name}<br />{contact.street}<br />{contact.city}</p>
+        <p>
+          Email: <a href={`mailto:${contact.email}`}>{contact.email}</a><br />
+          Tel: <a href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
+        </p>
+      </address>
+      <dl class="contact__hours">
+        {hours.map((h) => <div><dt>{h.day}:</dt> <dd>{h.time}</dd></div>)}
+      </dl>
+    </div>
+    <div class="contact__aside">
+      <p>Wil je onze privéruimte huren voor een feestelijke of zakelijke gelegenheid? Heb je een vraag over de mogelijkheden of heb je specifieke wensen? Neem contact met ons op!</p>
+      <div class="btn-row">
+        <Button href={`tel:${contact.phoneHref}`}>Bel ons</Button>
+        <Button href={`mailto:${contact.email}`} variant="outline">Mail ons</Button>
+      </div>
+      <Logo class="contact__logo" width={192} height={116} aria-hidden="true" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: minmax(0, 574fr) minmax(0, 786fr);
+    align-items: center;
+    max-width: calc(var(--w-wide) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: var(--section-y) var(--gutter);
+  }
+  .contact__media { position: relative; aspect-ratio: 574 / 502; overflow: hidden; }
+  .contact__media img { width: 100%; height: 100%; object-fit: cover; }
+
+  .contact__card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 396px);
+    gap: 32px clamp(24px, 3vw, 48px);
+    min-height: 576px;
+    padding: 61px 37px 48px 52px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--c-line-strong);
+    font-size: 1rem;
+    line-height: 1.8;
+    letter-spacing: 0;
+  }
+  .contact__title {
+    margin-bottom: 52px;
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: clamp(2.25rem, 2.9vw, 2.625rem);
+    line-height: 1;
+    color: var(--c-pink);
+  }
+  .contact address { display: grid; gap: 1.8em; font-style: normal; margin-bottom: 0; }
+  .contact a:not(.btn) { transition: color 0.3s; }
+  .contact a:not(.btn):hover { color: var(--c-pink-bright); }
+  .contact__hours { margin: 0; }
+  .contact__hours dt, .contact__hours dd { display: inline; margin: 0; }
+
+  .contact__aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 33px;
+    padding-top: 93px;
+  }
+  .contact__aside :global(.contact__logo) { margin-top: auto; align-self: center; color: var(--c-pure-white); }
+
+  @media (max-width: 1099px) {
+    .contact__card { grid-template-columns: 1fr; padding: 48px 32px; }
+    .contact__aside { padding-top: 0; }
+  }
+  @media (max-width: 899px) {
+    .contact { grid-template-columns: 1fr; }
+    .contact__media { aspect-ratio: 16 / 11; }
+    .contact__card { min-height: 0; }
+  }
+  @media (max-width: 479px) {
+    .contact__card { padding: 40px 20px; }
+    .contact__aside :global(.contact__logo) { width: 150px; }
+  }
+</style>

@@ -1,0 +1,119 @@
+---
+// Private lunch / dinner price list (Figma menu page, also reused on the
+// private-dining page). Row arrows link to the reservation form with the
+// chosen menu preselected.
+const rows = [
+  { name: 'Lunch menu 1', price: '€25,- p.p. (minimaal 15 personen)', note: 'The perfect mix' },
+  { name: 'Lunch menu 2', price: '€30,- p.p. (minimaal 12 personen)', note: "Let's go all out" },
+  { name: 'Lunch menu 3', price: '€42.5,- p.p. (minimaal 10 personen)', note: 'The perfect mix' },
+  { name: 'Lunch menu 4', price: '€56,- p.p. (minimaal 8 personen)', note: "Let's go all out" },
+  { name: 'Lunch menu 5', price: '€30,- p.p. (minimaal 12 personen)', note: "Let's go all out" },
+  { name: 'Drankpakket', price: '€56,- p.p. (minimaal 8 personen)', note: "Let's go all out" },
+];
+
+interface Props { headingLevel?: 'h2' | 'h3' }
+const { headingLevel: H = 'h2' } = Astro.props;
+---
+
+<div class="menu-table">
+  <div class="menu-table__head" data-reveal>
+    <H class="menu-table__group">Private lunch <span>( 11u - 17u )</span></H>
+    <H class="menu-table__group">Private dinner <span>( 11u - 17u )</span></H>
+  </div>
+  <ul class="menu-table__rows" role="list" data-reveal-stagger>
+    {rows.map((r) => (
+      <li class="menu-row">
+        <span class="menu-row__name">{r.name}</span>
+        <span class="menu-row__price">{r.price}</span>
+        <span class="menu-row__note">{r.note}</span>
+        <a class="menu-row__link" href={`/reservation/?menu=${encodeURIComponent(r.name)}`} aria-label={`Reserveer ${r.name}`}>
+          <svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true">
+            <rect x="7.18" y="0" width="1.65" height="15.2" fill="currentColor" />
+            <path fill="currentColor" fill-rule="evenodd" d="M8 14.67l6.39-6.38 1.16 1.16L8 17 .45 9.45l1.17-1.16L8 14.67Z" />
+          </svg>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .menu-table {
+    --cols: minmax(0, 291fr) minmax(0, 498fr) minmax(0, 305fr) 60px;
+    max-width: 1178px;
+    margin-inline: auto;
+  }
+  .menu-table__head {
+    display: grid;
+    grid-template-columns: minmax(0, 721fr) minmax(0, 457fr);
+    align-items: end;
+    margin-bottom: 32px;
+  }
+  .menu-table__group {
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: var(--fs-h3);
+    line-height: 1;
+    color: var(--c-pink);
+    letter-spacing: 0;
+  }
+  .menu-table__group span {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 0.25em;
+    font-size: 0.5em;
+    translate: 0 -0.3em;
+  }
+
+  .menu-table__rows {
+    margin: 0;
+    border-top: 1px solid var(--c-rule);
+  }
+  .menu-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--cols);
+    align-items: center;
+    gap: 16px;
+    padding: 0 12px;
+    min-height: 118px;
+    border-bottom: 1px solid var(--c-rule);
+    font-size: clamp(1.125rem, 1rem + 0.45vw, 1.5rem);
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--c-white);
+    transition: background-color 0.4s var(--ease);
+  }
+  .menu-row:hover { background: rgba(255, 255, 255, 0.04); }
+
+  .menu-row__link {
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 59px;
+    border: 1px solid var(--c-white);
+    border-radius: 35px;
+    color: var(--c-white);
+    transition: background-color 0.35s var(--ease), color 0.35s var(--ease), border-color 0.35s;
+  }
+  .menu-row__link::after { content: ''; position: absolute; inset: 0; }
+  .menu-row:hover .menu-row__link { background: var(--c-pink-bright); border-color: var(--c-pink-bright); color: var(--c-bg); }
+  .menu-row__link svg { transition: translate 0.4s var(--ease); }
+  .menu-row:hover .menu-row__link svg { translate: 0 3px; }
+
+  @media (max-width: 899px) {
+    .menu-table__head { grid-template-columns: 1fr; gap: 12px; }
+    .menu-row {
+      grid-template-columns: 1fr auto;
+      grid-template-areas: 'name link' 'price link' 'note link';
+      gap: 8px 16px;
+      padding: 20px 0;
+      min-height: 0;
+      line-height: 1.3;
+    }
+    .menu-row__name { grid-area: name; font-size: 1.25rem; }
+    .menu-row__price { grid-area: price; }
+    .menu-row__note { grid-area: note; opacity: 0.7; font-size: 1rem; }
+    .menu-row__link { grid-area: link; width: 52px; height: 52px; }
+  }
+</style>

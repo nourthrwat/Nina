@@ -1,0 +1,236 @@
+---
+// Reservation form from the Figma "Form - Reserveringsformulier".
+// There is no booking backend yet: set PUBLIC_RESERVATION_ENDPOINT to a URL that
+// accepts a JSON POST to enable submission. Without it the form validates and
+// then tells the visitor to call or mail instead of pretending to book.
+import Button from './Button.astro';
+import { contact } from '../data/site';
+
+const endpoint = import.meta.env.PUBLIC_RESERVATION_ENDPOINT ?? '';
+const choices = ['Private lunch', 'Private dinner', 'High Tea', 'Bedrijfsfeest', 'Vergaderen', 'Bruiloft', 'Babyshower', 'Verjaardag'];
+---
+
+<form class="res-form" novalidate data-reservation-form data-endpoint={endpoint}>
+  <div class="field">
+    <label class="visually-hidden" for="rf-name">Uw naam</label>
+    <input id="rf-name" name="name" type="text" placeholder="Uw naam" autocomplete="name" required aria-describedby="rf-name-err" />
+    <p class="field__error" id="rf-name-err" hidden>Vul uw naam in.</p>
+  </div>
+  <div class="field">
+    <label class="visually-hidden" for="rf-email">Uw emailadres</label>
+    <input id="rf-email" name="email" type="email" placeholder="Uw emailadres" autocomplete="email" required aria-describedby="rf-email-err" />
+    <p class="field__error" id="rf-email-err" hidden>Vul een geldig emailadres in.</p>
+  </div>
+  <div class="field">
+    <label class="visually-hidden" for="rf-phone">Uw telefoonnummer</label>
+    <input id="rf-phone" name="phone" type="tel" placeholder="Uw telefoonnummer" autocomplete="tel" required pattern="[0-9\s\+\(\)\-]{8,}" aria-describedby="rf-phone-err" />
+    <p class="field__error" id="rf-phone-err" hidden>Vul een geldig telefoonnummer in.</p>
+  </div>
+  <div class="field field--select">
+    <label class="visually-hidden" for="rf-choice">Soort reservering</label>
+    <select id="rf-choice" name="choice" required aria-describedby="rf-choice-err">
+      <option value="" selected disabled>Maak een keuze</option>
+      {choices.map((c) => <option>{c}</option>)}
+    </select>
+    <svg class="field__chevron" width="14" height="8" viewBox="0 0 14 8" aria-hidden="true"><path d="M1 1l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.2" /></svg>
+    <p class="field__error" id="rf-choice-err" hidden>Maak een keuze.</p>
+  </div>
+  <div class="res-form__row">
+    <div class="field field--overlay">
+      <label class="visually-hidden" for="rf-date">Datum</label>
+      <input id="rf-date" name="date" type="date" required aria-describedby="rf-date-err" />
+      <span class="field__ph" aria-hidden="true">dd-mm-jaar</span>
+      <p class="field__error" id="rf-date-err" hidden>Kies een datum vanaf vandaag.</p>
+    </div>
+    <div class="field">
+      <label class="visually-hidden" for="rf-guests">Aantal personen</label>
+      <input id="rf-guests" name="guests" type="number" inputmode="numeric" min="1" max="40" placeholder="Aantal personen" required aria-describedby="rf-guests-err" />
+      <p class="field__error" id="rf-guests-err" hidden>Vul een aantal tussen 1 en 40 in.</p>
+    </div>
+  </div>
+  <div class="field field--overlay">
+    <label class="visually-hidden" for="rf-time">Tijdsindicatie aankomst</label>
+    <input id="rf-time" name="time" type="time" step="900" />
+    <span class="field__ph" aria-hidden="true">Tijdsindicatie aankomst</span>
+  </div>
+  <div class="field">
+    <label class="visually-hidden" for="rf-notes">Opmerkingen</label>
+    <textarea id="rf-notes" name="notes" rows="3" placeholder="Opmerkingen"></textarea>
+  </div>
+
+  <div class="res-form__submit">
+    <Button type="submit">Reserveer nu</Button>
+  </div>
+  <p class="res-form__status" role="status" aria-live="polite" data-status hidden></p>
+  <p class="visually-hidden" data-fallback-msg>
+    Online reserveren is nog niet gekoppeld. Bel ons op {contact.phone} of mail naar {contact.email} om uw reservering te maken.
+  </p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-reservation-form]');
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const fallback = form.querySelector<HTMLElement>('[data-fallback-msg]')!.textContent!.trim();
+    const date = form.querySelector<HTMLInputElement>('#rf-date')!;
+    date.min = new Date().toISOString().slice(0, 10);
+
+    // Prefill from links such as /reservation/?menu=Lunch%20menu%201 or ?type=offerte
+    const params = new URLSearchParams(location.search);
+    const notes = form.querySelector<HTMLTextAreaElement>('#rf-notes')!;
+    if (params.get('menu')) notes.value = `Interesse in: ${params.get('menu')}`;
+    if (params.get('type') === 'offerte') notes.value = 'Ik ontvang graag een offerte.';
+
+    // Date/time inputs can't show a placeholder; overlay the Figma text until filled.
+    form.querySelectorAll<HTMLInputElement>('.field--overlay input').forEach((el) => {
+      const sync = () => el.classList.toggle('has-value', el.value !== '');
+      el.addEventListener('input', sync);
+      el.addEventListener('change', sync);
+      sync();
+    });
+
+    const fields = Array.from(form.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input[required], select[required]'));
+
+    const check = (el: HTMLInputElement | HTMLSelectElement) => {
+      const err = document.getElementById(el.getAttribute('aria-describedby') ?? '');
+      const ok = el.checkValidity() && el.value.trim() !== '';
+      el.toggleAttribute('aria-invalid', !ok);
+      if (err) err.hidden = ok;
+      return ok;
+    };
+
+    fields.forEach((el) => {
+      el.addEventListener('blur', () => { if (el.value) check(el); });
+      el.addEventListener('input', () => { if (el.hasAttribute('aria-invalid')) check(el); });
+    });
+
+    const show = (msg: string, tone: 'ok' | 'error') => {
+      status.hidden = false;
+      status.textContent = msg;
+      status.dataset.tone = tone;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const invalid = fields.filter((el) => !check(el));
+      if (invalid.length) {
+        invalid[0].focus();
+        show('Controleer de gemarkeerde velden.', 'error');
+        return;
+      }
+
+      const endpoint = form.dataset.endpoint;
+      if (!endpoint) {
+        show(fallback, 'error');
+        return;
+      }
+
+      const button = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      button.disabled = true;
+      show('Bezig met versturen…', 'ok');
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        location.assign('/thank-you/');
+      } catch {
+        show(`Er ging iets mis bij het versturen. ${fallback}`, 'error');
+        button.disabled = false;
+      }
+    });
+  }
+</script>
+
+<style>
+  .res-form {
+    display: grid;
+    gap: 13px;
+    max-width: 768px;
+    margin-inline: auto;
+  }
+  .res-form__row {
+    display: grid;
+    grid-template-columns: minmax(0, 467fr) minmax(0, 279fr);
+    gap: 13px 22px;
+  }
+  .field { position: relative; display: grid; gap: 6px; }
+  .field__ph {
+    position: absolute;
+    left: 25px;
+    top: 14px;
+    color: #bfbfbb;
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: 0;
+    pointer-events: none;
+  }
+  .field--overlay input:focus ~ .field__ph,
+  .field--overlay input.has-value ~ .field__ph { opacity: 0; }
+  .field--overlay input:not(.has-value):not(:focus)::-webkit-datetime-edit { color: transparent; }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 52px;
+    padding: 13px 24px;
+    border: 1px solid var(--c-pink);
+    border-radius: 0;
+    background: rgba(9, 18, 21, 0.05);
+    color: var(--c-white);
+    font-family: var(--f-body);
+    font-size: 1rem;
+    line-height: 1.5;
+    letter-spacing: 0;
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+    color-scheme: dark;
+  }
+  textarea { min-height: 108px; resize: vertical; background: rgba(194, 141, 133, 0.05); }
+  input::placeholder, textarea::placeholder { color: #bfbfbb; opacity: 1; }
+  input:hover, select:hover, textarea:hover { background-color: rgba(194, 141, 133, 0.08); }
+  input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: none;
+    border-color: var(--c-pink-bright);
+    box-shadow: 0 0 0 2px rgba(229, 164, 155, 0.35);
+  }
+  [aria-invalid] { border-color: #ff9a8a; }
+
+  select { appearance: none; padding-right: 56px; cursor: pointer; }
+  select:invalid { color: #bfbfbb; }
+  option { color: #0d272b; background: #eae5df; }
+  .field__chevron {
+    position: absolute;
+    right: 24px;
+    top: 22px;
+    color: var(--c-white);
+    pointer-events: none;
+  }
+
+  .field__error {
+    font-size: 0.875rem;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: #ffb4a8;
+  }
+
+  .res-form__submit { display: flex; justify-content: center; margin-top: 0; }
+  .res-form__status {
+    padding: 16px 20px;
+    border: 1px solid var(--c-line-strong);
+    font-size: 1rem;
+    line-height: 1.6;
+    letter-spacing: 0;
+    text-align: center;
+  }
+  .res-form__status[data-tone='error'] { border-color: rgba(229, 164, 155, 0.6); background: rgba(229, 164, 155, 0.08); }
+
+  @media (max-width: 559px) {
+    .res-form__row { grid-template-columns: 1fr; }
+    input, select, textarea { padding-inline: 16px; }
+    .field__ph { left: 17px; }
+  }
+</style>

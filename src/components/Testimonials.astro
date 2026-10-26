@@ -1,0 +1,110 @@
+---
+// "Wall of love": three review cards, the middle one taller (Figma Group 1000006418).
+import Star from '../assets/icons/star.svg';
+
+const reviews = [
+  {
+    quote: ['‘’I hosted my birthday at Huppeldepup and me and my friends had an amazing time! The space is beautiful, Michelle and Anouk were great hosts, the service was perfect and the music and atmosphere were top notch. I’m definitely returning to this warm and beautiful place for another occasion. Thank you, Huppeldepup!’’'],
+    name: 'Anonymous',
+    meta: '40th birthday at Nim',
+  },
+  {
+    quote: [
+      'We decided for Huppeldepup to be a part of our wedding day celebration. The food, service, planning, decoration, atmosphere were absolutely fantastic! We could not be happier with everything that Huppeldepup had done and made our wedding memorable.',
+      'Especially the communication between us and Michelle was amazingly and so easily. We highly recommend Huppeldepup to anyone who wants to have beautiful and magical experiences for birthdays, weddings or other events.',
+    ],
+    name: 'Anonymous',
+    meta: 'Celebrated wedding at Huppeldepup',
+  },
+  {
+    quote: ['I hosted my birthday at Huppeldepup and me and my friends had an amazing time! The space is beautiful, Michelle and Anouk were great hosts, the service was perfect and the music and atmosphere were top notch. I’m definitely returning to this warm and beautiful place for another occasion. Thank you, Huppeldepup!'],
+    name: 'Anonymous',
+    meta: '40th birthday at Huppeldepup',
+  },
+];
+---
+
+<section class="reviews" aria-labelledby="reviews-title">
+  <h2 id="reviews-title" class="h1 text-center" data-reveal>Wall of love</h2>
+  <ul class="reviews__grid" role="list" data-reveal-stagger>
+    {reviews.map((r) => (
+      <li>
+        <figure class="review">
+          <div class="review__stars" role="img" aria-label="5 van 5 sterren">
+            {Array.from({ length: 5 }, () => <Star width={20} height={20} aria-hidden="true" />)}
+          </div>
+          <blockquote class="review__quote">
+            {r.quote.map((p) => <p>{p}</p>)}
+          </blockquote>
+          <figcaption class="review__author">
+            <span class="review__name">{r.name}</span>
+            <span class="review__meta">{r.meta}</span>
+          </figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .reviews {
+    max-width: calc(var(--w-main) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: var(--section-y) var(--gutter);
+  }
+  .reviews h2 { margin-bottom: 61px; }
+  .reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 18px;
+    margin: 0;
+  }
+  .reviews__grid > li { height: 100%; }
+  .reviews__grid > li:nth-child(2) .review { min-height: 868px; }
+
+  .review {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 651px;
+    height: 100%;
+    margin: 0;
+    padding: 64px 48px 48px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid var(--c-line-strong);
+    transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease);
+  }
+  .review:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(229, 164, 155, 0.4); }
+  .review__stars { display: flex; gap: 2px; }
+  .review__quote {
+    display: grid;
+    gap: 1.25em;
+    margin: 0;
+    font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+    line-height: 1.25;
+    letter-spacing: 0.045em;
+    color: var(--c-pure-white);
+  }
+  .review__author {
+    display: grid;
+    gap: 2px;
+    margin-top: auto;
+    letter-spacing: 0;
+  }
+  .review__name { font-size: 1.125rem; line-height: 1.4; color: var(--c-pure-white); }
+  .review__meta { font-size: 0.9375rem; line-height: 16px; color: var(--c-white-60); }
+
+  @media (max-width: 1023px) {
+    .reviews__grid { grid-template-columns: 1fr 1fr; }
+    .reviews__grid > li:nth-child(2) { grid-row: span 2; }
+    .reviews__grid > li:nth-child(2) .review,
+    .review { min-height: 0; }
+    .review { padding: 48px 32px 36px; }
+  }
+  @media (max-width: 679px) {
+    .reviews__grid { grid-template-columns: 1fr; }
+    .reviews__grid > li:nth-child(2) { grid-row: auto; }
+    .review { padding: 40px 24px 32px; }
+  }
+</style>

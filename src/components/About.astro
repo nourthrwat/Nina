@@ -1,0 +1,91 @@
+---
+// "Wij zijn Huppeldepup": oversized statement text over a bleeding photo, then a
+// staggered pair of photos (Figma Group 1000006419).
+import { Image } from 'astro:assets';
+import roomTable from '../assets/img/room-table.jpg';
+import friends from '../assets/img/friends.jpg';
+import foodCandle from '../assets/img/food-candle.jpg';
+---
+
+<section class="about" aria-labelledby="about-title">
+  <h2 id="about-title" class="h1 about__title" data-reveal>Wij zijn Huppeldepup</h2>
+
+  <div class="about__lead">
+    <p class="about__statement" data-reveal>
+      ply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting,
+    </p>
+    <div class="about__hero-img" data-reveal="clip">
+      <Image src={roomTable} alt="Lange gedekte tafel in de privéruimte met schilderijen aan de muur" widths={[800, 1185, 2048]} sizes="(max-width: 767px) 100vw, 1185px" loading="lazy" />
+    </div>
+  </div>
+
+  <div class="about__pair">
+    <div class="about__img about__img--a" data-reveal="clip">
+      <Image src={friends} alt="Twee vriendinnen omhelzen elkaar aan tafel" widths={[520, 1026]} sizes="(max-width: 767px) 50vw, 513px" loading="lazy" />
+    </div>
+    <div class="about__img about__img--b" data-reveal="clip">
+      <Image src={foodCandle} alt="Tafel met hapjes, soep en een gouden kandelaar" widths={[520, 1036]} sizes="(max-width: 767px) 50vw, 518px" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    max-width: calc(var(--w-main) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: var(--section-y) var(--gutter);
+  }
+  .about__title { text-align: right; margin-bottom: clamp(48px, 7.6vw, 110px); }
+
+  .about__lead {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 444fr) minmax(0, 718fr);
+  }
+  .about__statement {
+    position: relative;
+    z-index: 1;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    max-width: 640px;
+    font-family: var(--f-display);
+    font-size: var(--fs-lead);
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: var(--c-white);
+  }
+  .about__hero-img {
+    position: relative;
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: clamp(140px, 16.5vw, 238px);
+    /* bleeds past the right edge like the Figma frame */
+    margin-right: calc(-1 * max(var(--gutter), (100vw - var(--w-main)) / 2));
+    aspect-ratio: 1185 / 732;
+    overflow: hidden;
+  }
+  .about__hero-img::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.4); }
+  .about__hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  .about__pair {
+    display: grid;
+    grid-template-columns: minmax(0, 513fr) minmax(0, 131fr) minmax(0, 518fr);
+    align-items: start;
+    margin-top: clamp(64px, 9.6vw, 138px);
+  }
+  .about__img { overflow: hidden; }
+  .about__img img { width: 100%; height: 100%; object-fit: cover; }
+  .about__img--a { grid-column: 1; aspect-ratio: 513 / 395; }
+  .about__img--b { grid-column: 3; aspect-ratio: 518 / 681; margin-top: 54px; }
+
+  @media (max-width: 1023px) {
+    .about__lead { grid-template-columns: 1fr; }
+    .about__hero-img { grid-column: 1; grid-row: 2; margin-top: 40px; margin-left: 20%; }
+  }
+  @media (max-width: 599px) {
+    .about__title { text-align: left; }
+    .about__hero-img { margin-left: 0; margin-right: calc(var(--gutter) * -1); }
+    .about__pair { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .about__img--b { grid-column: 2; margin-top: 40px; }
+  }
+</style>

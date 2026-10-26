@@ -1,0 +1,172 @@
+---
+// "Voor elke gelegenheid": 3×2 grid of occasion cards. The first card shows the
+// Figma "active" state (photo + arched corners + button); the others morph into
+// that shape on hover/focus.
+import { Image } from 'astro:assets';
+import Butterfly from '../assets/icons/butterfly.svg';
+import Hand from '../assets/icons/hand-pink.svg';
+import Raven from '../assets/icons/raven-pink.svg';
+import Diamond from './Diamond.astro';
+import flowers from '../assets/img/flowers.jpg';
+import { lorem } from '../data/site';
+
+interface Props {
+  href?: string;
+  id?: string;
+}
+const { href = '/all-inclusive-groups/', id = 'gelegenheden' } = Astro.props;
+
+const icons = [
+  { Icon: Butterfly, w: 79, h: 41 },
+  { Icon: Hand, w: 26, h: 64 },
+  { Icon: Raven, w: 63, h: 59 },
+];
+const items = ['Verjaardag', 'Hight Tea', 'Bedrijfsfeest', 'Babyshower', 'Bruiloft', 'Vergaderen'];
+---
+
+<section class="occasions" id={id}>
+  <div class="occasions__head text-center" data-reveal>
+    <h2 class="h1">Voor elke gelegenheid</h2>
+    <p>{lorem}</p>
+  </div>
+
+  <ul class="occasions__grid" role="list" data-reveal-stagger>
+    {items.map((title, i) => {
+      const { Icon, w, h } = icons[i % 3];
+      return (
+        <li>
+          <a class:list={['occasion', { 'occasion--featured': i === 0 }]} href={href}>
+            {i === 0 && (
+              <Image class="occasion__bg" src={flowers} alt="" widths={[480, 900]} sizes="(max-width: 767px) 100vw, 33vw" loading="lazy" />
+            )}
+            <span class="occasion__body">
+              <Icon class="occasion__icon" width={w} height={h} aria-hidden="true" />
+              <h3 class="occasion__title">{title}</h3>
+              <span class="occasion__text">Sorem ipsum dolor sit amet,</span>
+            </span>
+            <span class="occasion__btn" aria-hidden="true">
+              <Diamond />
+              Meer informatie
+            </span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+</section>
+
+<style>
+  .occasions {
+    max-width: calc(var(--w-wide) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: var(--section-y) var(--gutter);
+  }
+  .occasions__head {
+    display: grid;
+    gap: 48px;
+    max-width: 872px;
+    margin: 0 auto 64px;
+  }
+  .occasions__head p { padding-inline: clamp(0px, 8vw, 112px); }
+
+  .occasions__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 24px;
+    margin: 0;
+  }
+
+  .occasion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: clamp(420px, 41.7vw, 600px);
+    padding: 56px 40px;
+    border: 1px solid var(--c-pink-bright);
+    background: rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    isolation: isolate;
+    text-align: center;
+    transition: border-radius 0.7s var(--ease), background-color 0.5s var(--ease);
+  }
+  .occasions__grid li:nth-child(3) .occasion { border-color: var(--c-pink); }
+
+  .occasion__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 1.2s var(--ease);
+  }
+  .occasion--featured::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .occasion__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding-top: 56px;
+    transition: translate 0.7s var(--ease);
+  }
+  .occasion__title {
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: var(--fs-h4);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--c-white);
+  }
+  .occasion__text { opacity: 0.8; color: var(--c-pure-white); }
+
+  .occasion__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 28px;
+    border-radius: 32px;
+    background: var(--c-pink-bright);
+    color: #0a2124;
+    font-family: var(--f-ui);
+    font-size: 1rem;
+    line-height: 1.2;
+    letter-spacing: 0.045em;
+    white-space: nowrap;
+    opacity: 0;
+    translate: 0 16px;
+    transition: opacity 0.5s var(--ease), translate 0.6s var(--ease);
+  }
+
+  .occasion--featured,
+  .occasion:hover,
+  .occasion:focus-visible { border-radius: 200px; }
+  .occasion--featured .occasion__btn,
+  .occasion:hover .occasion__btn,
+  .occasion:focus-visible .occasion__btn { opacity: 1; translate: 0 0; }
+  .occasion:not(.occasion--featured):hover { background-color: rgba(229, 164, 155, 0.08); }
+  .occasion:hover .occasion__bg { scale: 1.05; }
+
+  @media (max-width: 1023px) {
+    .occasions__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 16px; }
+    .occasion { padding: 40px 24px; }
+    .occasion__body { padding-top: 24px; }
+  }
+  @media (max-width: 599px) {
+    .occasions__grid { grid-template-columns: 1fr; }
+    .occasion { height: 380px; }
+    /* touch screens have no hover: show the CTA on every card */
+    .occasion__btn { opacity: 1; translate: 0 0; }
+    .occasion--featured { border-radius: 160px; }
+  }
+</style>

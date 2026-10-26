@@ -1,0 +1,72 @@
+---
+// "Call to action big": photo with the headline overlapping its lower edge.
+import { Image } from 'astro:assets';
+import Button from './Button.astro';
+import foodTable from '../assets/img/food-table.jpg';
+import { lorem } from '../data/site';
+
+// The block can appear twice on one page, so its heading id must be unique.
+const titleId = `cta-title-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<section class="cta" aria-labelledby={titleId}>
+  <div class="cta__media" data-reveal="clip">
+    <Image src={foodTable} alt="Gedekte tafel met soep, broodjes en bloemen" widths={[640, 1162, 2048]} sizes="(max-width: 1240px) 100vw, 1162px" loading="lazy" />
+  </div>
+  <div class="cta__body">
+    <h2 id={titleId} class="h1 cta__title" data-reveal>Kom nu bij ons genieten</h2>
+    <div class="cta__copy" data-reveal>
+      <p>{lorem}</p>
+      <div class="btn-row">
+        <Button href="/reservation/">Reserveer nu</Button>
+        <Button href="/reservation/?type=offerte" variant="outline">Offerte opvragen</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    max-width: calc(var(--w-main) + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: var(--section-y) var(--gutter);
+  }
+  .cta__media {
+    position: relative;
+    aspect-ratio: 1162 / 600;
+    overflow: hidden;
+  }
+  .cta__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+  }
+  .cta__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 53%;
+  }
+  .cta__body {
+    position: relative;
+    z-index: 1;
+    margin-top: calc(var(--fs-h1) * -0.59);
+  }
+  .cta__title {
+    max-width: 1033px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .cta__copy {
+    display: grid;
+    gap: 32px;
+    max-width: 596px;
+    margin: 64px 0 0 clamp(0px, 7.6vw, 110px);
+  }
+
+  @media (max-width: 767px) {
+    .cta__media { aspect-ratio: 4 / 3; }
+    .cta__copy { margin: 40px 0 0; }
+  }
+</style>

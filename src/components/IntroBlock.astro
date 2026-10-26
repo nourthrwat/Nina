@@ -1,0 +1,42 @@
+---
+// Centered eyebrow + copy + two CTAs (Figma "Frame 38/39"), closed by a hairline.
+import Button from './Button.astro';
+import { lorem } from '../data/site';
+
+interface Props {
+  eyebrow: string;
+  text?: string;
+  bordered?: boolean;
+}
+const { eyebrow, text = lorem, bordered = true } = Astro.props;
+---
+
+<section class:list={['intro', { 'intro--bordered': bordered }]}>
+  <div class="intro__inner" data-reveal-stagger>
+    <h2 class="eyebrow">{eyebrow}</h2>
+    <p class="intro__text">{text}</p>
+    <div class="btn-row btn-row--center">
+      <Button href="/reservation/">Reserveer nu</Button>
+      <Button href="/reservation/?type=offerte" variant="outline">Offerte opvragen</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro {
+    max-width: calc(1157px + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: 64px var(--gutter);
+  }
+  .intro--bordered { border-bottom: 1px solid var(--c-line); }
+  .intro__inner {
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+    max-width: 668px;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .intro__text { letter-spacing: 0.045em; color: var(--c-white); }
+  .intro .btn-row { margin-top: 16px; }
+</style>

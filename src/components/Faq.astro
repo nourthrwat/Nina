@@ -1,0 +1,103 @@
+---
+// "Frequently asked questions" accordion. The design only lists the questions;
+// answers use the same placeholder copy as the rest of the design until the
+// client supplies them.
+import { lorem } from '../data/site';
+
+const questions = [
+  'Wat zijn de kosten van Private Dining?',
+  'Voor hoeveel personen is jullie Private Dining zaal geschikt?',
+  'Kan ik mijn reservering annuleren?',
+  'Waarom dien ik een aanbetaling te voldoen?',
+  'Wat is het minimaal aantal personen voor afname?',
+];
+---
+
+<section class="faq" aria-labelledby="faq-title">
+  <h2 id="faq-title" class="faq__title" data-reveal>Frequently asked questions</h2>
+  <div class="faq__list" data-reveal-stagger>
+    {questions.map((q) => (
+      <details class="faq__item" name="faq">
+        <summary>
+          <span>{q}</span>
+          <svg class="faq__icon" width="16" height="17" viewBox="0 0 16 17" aria-hidden="true">
+            <path fill="currentColor" fill-rule="evenodd" d="M8.37 13.85l5.56-5.56 1.17 1.16L7.55 17 0 9.45l1.16-1.16 5.57 5.56V0h1.64v13.85Z" />
+          </svg>
+        </summary>
+        <div class="faq__answer"><p>{lorem}</p></div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Smoothly animate <details> open/close; native toggle remains the fallback.
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLDetailsElement>('.faq__item').forEach((item) => {
+    const summary = item.querySelector('summary');
+    const answer = item.querySelector<HTMLElement>('.faq__answer');
+    if (!summary || !answer || reduce) return;
+
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (item.open) {
+        const anim = answer.animate([{ height: `${answer.offsetHeight}px` }, { height: '0px' }], { duration: 350, easing: 'ease-out' });
+        item.classList.remove('is-open');
+        anim.onfinish = () => { item.open = false; };
+      } else {
+        document.querySelectorAll<HTMLDetailsElement>('.faq__item[open]').forEach((other) => {
+          other.open = false;
+          other.classList.remove('is-open');
+        });
+        item.open = true;
+        item.classList.add('is-open');
+        answer.animate([{ height: '0px' }, { height: `${answer.offsetHeight}px` }], { duration: 400, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' });
+      }
+    });
+  });
+</script>
+
+<style>
+  .faq {
+    max-width: calc(818px + var(--gutter) * 2);
+    margin-inline: auto;
+    padding: var(--section-y) var(--gutter);
+  }
+  .faq__title {
+    margin-bottom: 60px;
+    font-family: var(--f-display);
+    font-weight: 400;
+    font-size: clamp(2.25rem, 3.75vw, 3.375rem);
+    line-height: 1;
+    color: var(--c-pink);
+  }
+  .faq__item { border-bottom: 1px solid var(--c-rule); }
+  .faq__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 14px 0;
+    min-height: 50px;
+    font-size: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: var(--c-white);
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.3s;
+  }
+  .faq__item:first-child summary { padding-top: 0; }
+  .faq__item summary::-webkit-details-marker { display: none; }
+  .faq__item summary:hover { color: var(--c-pink-bright); }
+  .faq__icon { flex: none; transition: rotate 0.4s var(--ease); }
+  .faq__item[open] .faq__icon,
+  .faq__item.is-open .faq__icon { rotate: 180deg; }
+  .faq__answer { overflow: hidden; }
+  .faq__answer p { padding: 0 48px 24px 0; color: rgba(234, 229, 223, 0.8); }
+
+  @media (max-width: 599px) {
+    .faq__answer p { padding-right: 0; }
+    .faq__item summary { gap: 16px; }
+  }
+</style>
