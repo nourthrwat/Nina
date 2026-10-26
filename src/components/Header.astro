@@ -1,10 +1,11 @@
 ---
+import { url } from '../lib/url';
 import Logo from '../assets/icons/logo.svg';
 import Button from './Button.astro';
 import { allPages, contact, nav } from '../data/site';
 
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => href === path;
+const isCurrent = (href: string) => url(href) === path;
 ---
 
 <header class="header">
@@ -25,20 +26,20 @@ const isCurrent = (href: string) => href === path;
         <ul role="list">
           {nav.map((item) => (
             <li>
-              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+              <a href={url(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
             </li>
           ))}
         </ul>
       </nav>
     </div>
 
-    <a href="/" class="header__logo" aria-label="Nim – naar de homepage">
+    <a href={url('/')} class="header__logo" aria-label="Nim – naar de homepage">
       <Logo width={107} height={64} aria-hidden="true" />
     </a>
 
     <div class="header__right">
       <p class="header__rating"><span aria-hidden="true">⭐️</span> 4.8/5 - Gebaseerd op 50+ Google reviews</p>
-      <Button href="/reservation/" class="header__cta">Reserveer nu</Button>
+      <Button href={url('/reservation/')} class="header__cta">Reserveer nu</Button>
     </div>
   </div>
 
@@ -47,14 +48,14 @@ const isCurrent = (href: string) => href === path;
       <ul role="list" class="menu__list">
         {allPages.map((item, i) => (
           <li style={`--i:${i}`}>
-            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
+            <a href={url(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
           </li>
         ))}
       </ul>
       <div class="menu__meta">
         <p>{contact.street}<br />{contact.city}</p>
         <p><a href={`mailto:${contact.email}`}>{contact.email}</a><br /><a href={`tel:${contact.phoneHref}`}>{contact.phone}</a></p>
-        <Button href="/reservation/">Reserveer nu</Button>
+        <Button href={url('/reservation/')}>Reserveer nu</Button>
       </div>
     </nav>
   </div>

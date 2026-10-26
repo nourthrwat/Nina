@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import type { HTMLAttributes } from 'astro/types';
 import Diamond from './Diamond.astro';
 
@@ -16,7 +17,7 @@ const Tag = href ? 'a' : 'button';
 ---
 
 <Tag
-  href={href}
+  href={url(href)}
   type={href ? undefined : type}
   class:list={['btn', `btn--${variant}`, className]}
   {...rest}

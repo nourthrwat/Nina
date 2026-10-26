@@ -68,6 +68,7 @@ const choices = ['Private lunch', 'Private dinner', 'High Tea', 'Bedrijfsfeest',
 </form>
 
 <script>
+  import { url } from '../lib/url';
   const form = document.querySelector<HTMLFormElement>('[data-reservation-form]');
 
   if (form) {
@@ -136,7 +137,7 @@ const choices = ['Private lunch', 'Private dinner', 'High Tea', 'Bedrijfsfeest',
           body: JSON.stringify(Object.fromEntries(new FormData(form))),
         });
         if (!res.ok) throw new Error(String(res.status));
-        location.assign('/thank-you/');
+        location.assign(url('/thank-you/')!);
       } catch {
         show(`Er ging iets mis bij het versturen. ${fallback}`, 'error');
         button.disabled = false;

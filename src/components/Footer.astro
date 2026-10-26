@@ -1,4 +1,5 @@
 ---
+import { url } from '../lib/url';
 import Logo from '../assets/icons/logo-footer.svg';
 import { contact, hours, occasions, socials } from '../data/site';
 ---
@@ -6,7 +7,7 @@ import { contact, hours, occasions, socials } from '../data/site';
 <footer class="footer">
   <div class="footer__grid">
     <div class="footer__brand">
-      <a href="/" class="footer__logo" aria-label="Nim – home">
+      <a href={url('/')} class="footer__logo" aria-label="Nim – home">
         <Logo width={192} height={115} aria-hidden="true" />
       </a>
       <address class="footer__address">
@@ -25,13 +26,13 @@ import { contact, hours, occasions, socials } from '../data/site';
       <h2 id="footer-links" class="footer__title">Links</h2>
       <div class="footer__lists">
         <ul role="list">
-          <li><a href="/private-dining/">Private Dining</a></li>
-          {occasions.map((o) => <li><a href="/all-inclusive-groups/#gelegenheden">{o}</a></li>)}
+          <li><a href={url('/private-dining/')}>Private Dining</a></li>
+          {occasions.map((o) => <li><a href={url('/all-inclusive-groups/#gelegenheden')}>{o}</a></li>)}
         </ul>
         <ul role="list">
-          <li><a href="/menu/">Menu</a></li>
-          <li><a href="/reservation/#contact">Contact</a></li>
-          <li><a href="/reservation/">Reserveren</a></li>
+          <li><a href={url('/menu/')}>Menu</a></li>
+          <li><a href={url('/reservation/#contact')}>Contact</a></li>
+          <li><a href={url('/reservation/')}>Reserveren</a></li>
         </ul>
       </div>
     </nav>
