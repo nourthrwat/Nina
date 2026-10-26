@@ -43,7 +43,7 @@ const isCurrent = (href: string) => url(href) === path;
     </div>
   </div>
 
-  <div class="menu" id="site-menu" data-menu hidden>
+  <div class="menu" id="site-menu" data-menu data-lenis-prevent hidden>
     <nav class="menu__inner container" aria-label="Volledig menu">
       <ul role="list" class="menu__list">
         {allPages.map((item, i) => (
@@ -62,15 +62,25 @@ const isCurrent = (href: string) => url(href) === path;
 </header>
 
 <script>
+  import { getLenis } from '../scripts/smooth-scroll';
+
   const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const menu = document.querySelector<HTMLElement>('[data-menu]');
   const label = toggle?.querySelector('.visually-hidden');
 
   if (toggle && menu) {
+    const header = toggle.closest<HTMLElement>('.header')!;
+    const bar = header.querySelector<HTMLElement>('.header__bar')!;
+
     const setOpen = (open: boolean) => {
+      // The bar goes position:fixed while open; hold its space so the page doesn't shift.
+      header.style.height = open ? `${bar.offsetHeight}px` : '';
       toggle.setAttribute('aria-expanded', String(open));
       if (label) label.textContent = open ? 'Menu sluiten' : 'Menu openen';
       document.documentElement.classList.toggle('menu-open', open);
+      // Freeze the page behind the overlay; the overlay itself scrolls natively.
+      if (open) getLenis()?.stop();
+      else getLenis()?.start();
       if (open) {
         menu.hidden = false;
         requestAnimationFrame(() => menu.classList.add('is-open'));
@@ -87,7 +97,8 @@ const isCurrent = (href: string) => url(href) === path;
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
         setOpen(false);
-        toggle.focus();
+        // the toggle sits at the top of the document; don't let focus scroll back up to it
+        toggle.focus({ preventScroll: true });
       }
     });
     menu.addEventListener('click', (e) => {

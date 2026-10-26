@@ -51,6 +51,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
     <Footer />
     <script>
       import { initReveal } from '../scripts/reveal';
+      import { initSmoothScroll } from '../scripts/smooth-scroll';
+      initSmoothScroll();
       initReveal();
     </script>
   </body>

@@ -35,7 +35,7 @@ const slides = [
   </div>
 
   <div class="gallery__viewport" data-reveal="fade">
-    <ul class="gallery__track" role="list" data-gallery-track tabindex="0" aria-label="Foto's van Nim">
+    <ul class="gallery__track" role="list" data-gallery-track data-lenis-prevent-horizontal tabindex="0" aria-label="Foto's van Nim">
       {slides.map((s) => (
         <li class:list={['gallery__slide', { 'gallery__slide--tall': s.tall }]}>
           <Image src={s.src} alt={s.alt} widths={[440, 880]} sizes="(max-width: 767px) 75vw, 478px" loading="lazy" />
